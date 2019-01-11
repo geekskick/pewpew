@@ -9,7 +9,7 @@ body {
 }
 
 #titlediv {
-  font-family: monospace;
+  font-family: arial;
   text-align: center;
   font-size:48px;
   position:fixed;
@@ -29,7 +29,7 @@ body {
   width:50%;
   height:100px;
   color:white;
-  background-color:black;
+  background-color:transparent;
   padding:5px;
   bottom:0px;
   overflow-y: auto;
@@ -106,6 +106,11 @@ body {
 function about() {
   $("#about").modal();
 }
+
+function info(attack){
+	console.log("info("+attack+")");
+	$(attack).modal();
+}
 </script>
 
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
@@ -113,21 +118,14 @@ function about() {
 </head>
 
 <body>
-
-  <audio id="starwars" src="Blaster-Solo.wav" preload="auto"></audio>
-  <audio id="tng" src="tng_torpedo_clean.mp3" preload="auto"></audio>
-  <audio id="b5" src="B5-interceptor1.wav" preload="auto"></audio>
-  <audio id="wargames" src="WarGames-KeyPress.wav" preload="auto"></audio>
-  <audio id="pew" src="pew.mp3" preload="auto"></audio>
-  <audio id="galaga" src="shot_sound.mp3" preload="auto"></audio>
-  <audio id="asteroids" src="asteroids.mp3" preload="auto"></audio>
-  <audio id="china" src="china.mp3" preload="auto"></audio>
-  <audio id="timallen" src="timallen.wav" preload="auto"></audio>
+	<div id="mitm" title="Basic dialog">
+  		<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+	</div>
 
   <center><div id="container1"></div></center>
-  <div id="titlediv">IPew Attack Map</div>
+  <div id="titlediv">Cyber Attack Map</div>
   <div id="attackdiv"></div>
-  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
+  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="info(mitm);"></i></div>
 
   <div id="ccdiv">
   <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
@@ -157,14 +155,7 @@ function about() {
     attack_max = 2000 ;
 
     // add/change the attack types here
-    attack_type = [ "any port scan in a storm", "ssh brutish force", "Thought Leader Tweet",
-                    "SYN FLOOD BA-BY", "Spotty", "Heartbleed Hotel", "Po_ODLE", "Sharknado",
-                    "CORGI Attack", "Ping of DOOM", "Conficker", "Goldfinger", "SANDPAPER",
-                    "SNAILshock", "Spaghetti RAT", "Driduplex" ] ;
-
-    // gotta add types here if you add more sounds (or delete them)
-
-    audio_type = [ "starwars", "tng", "b5", "wargames", "pew", "galaga", "asteroids", "china", "timallen" ]
+    attack_type = [ "malware", "phishing", "man in the middle", "denial of service", "SQL injection", "zero day exploit" ];
 
     // need this to more easily grab URI query parameters
     $.extend({
@@ -215,22 +206,12 @@ function about() {
     var greenattacks = $.getUrlVar("greenattacks")
     var redattacks = $.getUrlVar("redattacks")
 
-    snd_id = "starwars" ;
-    if (typeof tng !== 'undefined') { snd_id = "tng" ; }
-    if (typeof b5 !== 'undefined') { snd_id = "b5" ; }
-    if (typeof wargames !== 'undefined') { snd_id = "wargames" ; }
-    if (typeof pew !== 'undefined') { snd_id = "pew" ; }
-    if (typeof galaga !== 'undefined') { snd_id = "galaga" ; }
-    if (typeof asteroids !== 'undefined') { snd_id = "asteroids" ; }
-    if (typeof china !== 'undefined') { snd_id = "china" ; }
-    if (typeof timallen !== 'undefined') { snd_id = "timallen" ; }
-
     if (typeof bad_day !== 'undefined') {
       attack_min=200;
       attack_max=200;
     }
 
-    if (typeof org_name !== 'undefined') { $("#titlediv").text(decodeURI(org_name) + " IPew Attack Map").html() }
+    if (typeof org_name !== 'undefined') { $("#titlediv").text(decodeURI(org_name) + " Cyber Attack Map").html() }
 
     // we maintain a fixed queue of "attacks" via this class
     function FixedQueue( size, initialValues ){
@@ -316,7 +297,7 @@ function about() {
 
         geographyConfig: {
           dataUrl: null,
-          hideAntarctica: true,
+          hideAntarctica: false,
           borderWidth: 0.75,
           borderColor: '#4393c3',
           popupTemplate: function(geography, data) {
@@ -379,15 +360,6 @@ function about() {
            if ((dst == src)) {
             dst = src + 1 ;
             if (dst > slatlong.length-1) { dst = src - 1 }
-           }
-
-           if (typeof allfx !== 'undefined') {
-             snd_id = audio_type[Math.floor((Math.random() * audio_type.length))];
-           }
-           // no guarantee of sound playing w/o the load - stupid browsers
-           if (typeof nofx === 'undefined') {
-             document.getElementById(snd_id).load();
-             document.getElementById(snd_id).play();
            }
 
            // add hit to the arc queue

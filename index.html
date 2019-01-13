@@ -5,7 +5,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: black;
+  background: white;
 }
 
 #titlediv {
@@ -15,8 +15,8 @@ body {
   position:fixed;
   width:100%;
   height:50px;
-  color:white;
-  background-color:black;
+  color:black;
+  background-color:transparent;
   padding:5px;
   top:0px;
   overflow-y: auto;
@@ -26,22 +26,23 @@ body {
   font-family: monospace;
   font-size:10px;
   position:fixed;
-  width:50%;
+  width:33%;
   height:100px;
-  color:white;
+  color:black;
   background-color:transparent;
   padding:5px;
   bottom:0px;
   overflow-y: auto;
 }
 
-#container1 {
+#fullscreen {
   position: relative;
   width: 100vw;
   height: 100vh;
   max-width:100%;
   max-height:100%
 }
+
 
 #about {
   display: hidden;
@@ -66,7 +67,11 @@ body {
   right:0px;
   position:fixed;
   padding:5px;
-  color: white;
+  color: black;
+}
+
+#mitm {
+	display:none;
 }
 
 #about {display:none;}
@@ -122,7 +127,7 @@ function info(attack){
   		<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
 	</div>
 
-  <center><div id="container1"></div></center>
+  <center><div id="fullscreen"></div></center>
   <div id="titlediv">Cyber Attack Map</div>
   <div id="attackdiv"></div>
   <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="info(mitm);"></i></div>
@@ -153,9 +158,6 @@ function info(attack){
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
-
-    // add/change the attack types here
-    attack_type = [ "malware", "phishing", "man in the middle", "denial of service", "SQL injection", "zero day exploit" ];
 
     // need this to more easily grab URI query parameters
     $.extend({
@@ -198,7 +200,6 @@ function info(attack){
     var galaga = $.getUrlVar('galaga')
     var asteroids = $.getUrlVar('asteroids')
     var china = $.getUrlVar('china')
-    var timallen = $.getUrlVar('timallen')
     var drill_mode = $.getUrlVar("drill_mode")
     var in_lat = $.getUrlVar("lat")
     var in_lon = $.getUrlVar("lon")
@@ -275,7 +276,6 @@ function info(attack){
     };
 
     // need to make this dynamic since it is approximated from sources
-
     var countries = [9,22,29,49,56,58,78,82,102,117,139,176,186] ;
     var weight = [0.000,0.001,0.004,0.008,0.009,0.037,0.181,0.002,0.000,0.415,0.006,0.075,0.088];
 
@@ -289,29 +289,38 @@ function info(attack){
     var map = new Datamap({
 
         scope: 'world',
-        element: document.getElementById('container1'),
+        element: document.getElementById('fullscreen'),
         projection: 'winkel3',
         // change the projection to something else only if you have absolutely no cartographic sense
-
-        fills: { defaultFill: 'black', },
 
         geographyConfig: {
           dataUrl: null,
           hideAntarctica: false,
-          borderWidth: 0.75,
-          borderColor: '#4393c3',
+          borderWidth: 1,
+          borderColor: 'blue',
           popupTemplate: function(geography, data) {
             return '<div class="hoverinfo" style="color:white;background:black">' +
                    geography.properties.name + '</div>';
           },
           popupOnHover: true,
-          highlightOnHover: false,
-          highlightFillColor: 'black',
-          highlightBorderColor: 'rgba(250, 15, 160, 0.2)',
-          highlightBorderWidth: 2
+          highlightOnHover: true,
+          highlightFillColor: 'green',
+          highlightBorderColor: 'black',
         },
+        fills: {
+	        defaultFill: 'white'
+	    }
 
-      })
+      });
+
+    var attack_type = [ 
+	    	{ name: "malware", 			fillKey: 'blue' }, 
+	    	{ name: "phishing", 		fillKey: 'red' }, 
+	    	{ name: "man in the middle",fillKey: 'black' }, 
+	    	{ name: "denial of service",fillKey: 'purple' },
+	    	{ name: "SQL injection", 	fillKey: 'orange' },
+	    	{ name: "zero day exploit", fillKey: 'teal' }
+	     ];
 
     // we read in a modified file of all country centers
     var centers = [] ;
@@ -321,7 +330,6 @@ function info(attack){
 
     // setup structures for the "hits" (arcs)
     // and circle booms
-
     var hits = FixedQueue( 7, [  ] );
     var boom = FixedQueue( 7, [  ] );
 
@@ -362,52 +370,20 @@ function info(attack){
             if (dst > slatlong.length-1) { dst = src - 1 }
            }
 
+       		//console.log(map);
+
            // add hit to the arc queue
            // use strokeColor to set arc line color
-
            var srclat = slatlong[src].lat;
            var srclong = slatlong[src].long;
            var dstlat = slatlong[dst].lat;
            var dstlong = slatlong[dst].long;
-           which_attack = attack_type[Math.floor((Math.random() * attack_type.length))];
            var srccountry = slatlong[src]["country"];
-           // "Hi, Mandiant!!"
-           if (typeof china_mode !== 'undefined') {
-             srclat = cnlatlong[src].lat;
-             srclong = cnlatlong[src].long;
-             if (cnlatlong[src].country=="chn") { which_attack = "ZOMGOSH CHINA!!!!!!"; }
-             srccountry = cnlatlong[src]["country"];
-           }
-           // "Hi, Kim Jong!"
-           else if (typeof dprk_mode !== 'undefined') {
-             srclat = 39.0194;
-             srclong = 125.7381;
-             which_attack = "ZOMG NORTH KOREAZ!!!";
-             srccountry = "kp";
-           }
-           // source is always Chattanooga if chatt_mode is set
-           // "Hi ThreatStream!!" http://www.csoonline.com/article/2689609/network-security/threat-intelligence-firm-mistakes-research-for-nation-state-attack.html
-           else if (typeof chatt_mode !== 'undefined') {
-             srclat = 35.0456297;
-             srclong = -85.30968;
-             which_attack = "OMG NATION STATE CHATTANOOGA!!!";
-             srccountry = "usa";
-           }
-           // blame a former employee
-           else if (typeof employee_mode !== 'undefined') {
-             if (typeof in_lat !== 'undefined' && typeof in_lon !== 'undefined') {
-               srclat = in_lat;
-               srclong = in_lon;
-             }
-             which_attack = "Former employee attack"
-             if (typeof employee_fname !== 'undefined' && typeof employee_lname !== 'undefined') {
-               which_attack += ":" + employee_fname + " " + employee_lname;
-             }
-             srccountry = "usa";
-           }
-
+           
+           which_attack = attack_type[Math.floor((Math.random() * attack_type.length))];
+  
            // Specify a country
-           else if (typeof origin !== 'undefined') {
+            if (typeof origin !== 'undefined') {
              srccountry = origin.toUpperCase();
              var center_id = 0;
              for (i = 0; i < centers.length; i ++) {
@@ -442,24 +418,11 @@ function info(attack){
             attackdiv_slatlong = slatlong[dst]["country"];
            }
 
-           // Specify attack color
-           if (typeof greenattacks !== 'undefined') {
-             strokeColor = 'green';
-           }
-           else if (typeof redattacks !== 'undefined') {
-             strokeColor = 'red';
-           }
-           else {
-             if (getStroke() < 70) {
-               strokeColor = 'green';
-             }
-             else {
-               strokeColor = 'red';
-             }
-           }
+           
+           strokeColor = which_attack.fillKey;
+           
 
            if (typeof drill_mode != 'undefined') {
-
               dstlat = in_lat
               dstlong = in_lon
            }
@@ -469,12 +432,12 @@ function info(attack){
            map.arc(hits, {strokeWidth: 2, strokeColor: strokeColor});
 
            // add boom to the bubbles queue
-
            boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,
-                        fillOpacity: 0.5, attk: which_attack} );
+                        fillOpacity: 1, attk: which_attack, fill: strokeColor} );
+
            map.bubbles(boom, {
                 popupTemplate: function(geo, data) {
-                  return '<div class="hoverinfo">' + data.attk + '</div>';
+                  return '<div class="hoverinfo">' + data.attk.name + '</div>';
                 }
             });
 
@@ -482,7 +445,7 @@ function info(attack){
            $('#attackdiv').append(srccountry + " (" + randomIP() + ") " +
                                   " <span style='color:red'>attacks</span> " +
                                   attackdiv_slatlong+  " (" + randomIP() + ") " +
-                                  " <span style='color:steelblue'>(" + which_attack + ")</span> " +
+                                  " <span style='color:"+which_attack.fillKey+"'>(" + which_attack.name + ")</span> " +
                                   "<br/>");
            $('#attackdiv').animate({scrollTop: $('#attackdiv').prop("scrollHeight")}, 500);
 

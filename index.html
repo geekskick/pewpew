@@ -56,7 +56,7 @@ body {
   right:0px;
   position:fixed;
   padding:10px;
-  color: white;
+  color: black;
 }
 
 #ccdiv {
@@ -70,11 +70,45 @@ body {
   color: black;
 }
 
-#mitm {
+.info_box {
 	display:none;
 }
 
-#about {display:none;}
+#about {
+	display:none;
+}
+
+.page_button{
+	background-color: #4CAF50;
+  	border: none;
+  	color: white;
+  	font-size: 10px;
+ 	width: 10%;
+ 	height: 10%;
+  	text-align: center;
+  	cursor: pointer;
+   	position:fixed;
+}
+
+.left_btn{
+  left: 5%;
+}
+
+.right_btn{
+  right: 5%;
+}
+
+.top_btn{
+  top: 5%;
+}
+
+.middle_btn{
+  top: 35%;
+}
+
+.bottom_btn{
+  bottom: 25%;
+}
 
 /* Overlay */
 #simplemodal-overlay {background-color:#000;}
@@ -123,16 +157,28 @@ function info(attack){
 </head>
 
 <body>
-	<div id="mitm" title="Basic dialog">
-  		<p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
-	</div>
+	<div id="mitm" class="info_box" title="MITM"><p>MITM Description here</p></div>
+	<div id="sql" class="info_box" title="SQL injection"><p>SQL Description here</p></div>
+	<div id="malware" class="info_box" title="malware"><p>malware Description here</p></div>
+	<div id="DoS" class="info_box" title="denial of service"><p>DoS Description here</p></div>
+	<div id="phishing" class="info_box" title="phishing"><p>phishing Description here</p></div>
+	<div id="ZDE" class="info_box" title="ZDE"><p>ZDE Description here</p></div>
+
 
   <center><div id="fullscreen"></div></center>
   <div id="titlediv">Cyber Attack Map</div>
   <div id="attackdiv"></div>
-  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="info(mitm);"></i></div>
+  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
+
+  <button class="page_button top_btn left_btn" onClick="info(mitm);" style="background-color:black;">MITM</button>
+  <button class="page_button middle_btn left_btn" onClick="info(sql);" style="background-color:orange;">SQL</button>
+  <button class="page_button bottom_btn left_btn" onClick="info(malware);" style="background-color:blue;">malware</button>
+  <button class="page_button top_btn right_btn" onClick="info(phishing);" style="background-color:red;">phishing</button>
+  <button class="page_button middle_btn right_btn" onClick="info(DoS);" style="background-color:purple;">denial of service</button>
+  <button class="page_button bottom_btn right_btn" onClick="info(ZDE);" style="background-color:teal;">zero day exploit</button>
 
   <div id="ccdiv">
+
   <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
   </div>
 
@@ -191,14 +237,8 @@ function info(attack){
     var employee_lname = $.getUrlVar('employee_lname');
     var origin = $.getUrlVar('origin');
     var random_mode = $.getUrlVar('random_mode');
-    var tng = $.getUrlVar('tng');
-    var wargames = $.getUrlVar('wargames');
     var b5 = $.getUrlVar('b5');
-    var nofx = $.getUrlVar('nofx');
-    var pew = $.getUrlVar('pew');
-    var allfx = $.getUrlVar('allfx')
     var galaga = $.getUrlVar('galaga')
-    var asteroids = $.getUrlVar('asteroids')
     var china = $.getUrlVar('china')
     var drill_mode = $.getUrlVar("drill_mode")
     var in_lat = $.getUrlVar("lat")
@@ -297,7 +337,7 @@ function info(attack){
           dataUrl: null,
           hideAntarctica: false,
           borderWidth: 1,
-          borderColor: 'blue',
+          //borderColor: 'blue',
           popupTemplate: function(geography, data) {
             return '<div class="hoverinfo" style="color:white;background:black">' +
                    geography.properties.name + '</div>';
@@ -307,9 +347,9 @@ function info(attack){
           highlightFillColor: 'green',
           highlightBorderColor: 'black',
         },
-        fills: {
-	        defaultFill: 'white'
-	    }
+        //fills: {
+	    //    defaultFill: 'white'
+	    //}
 
       });
 

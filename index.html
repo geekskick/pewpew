@@ -89,6 +89,7 @@
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
+    shown_attacks = 10;
 
     // need this to more easily grab URI query parameters
     $.extend({
@@ -164,8 +165,8 @@
 
     // setup structures for the "hits" (arcs)
     // and circle booms
-    var hits = FixedQueue( 7, [  ] );
-    var boom = FixedQueue( 7, [  ] );
+    var hits = FixedQueue( shown_attacks, [  ] );
+    var boom = FixedQueue( shown_attacks, [  ] );
 
     // doing this a bit fancy for a hack, but it makes it
     // easier to group code functions together and have variables
@@ -212,7 +213,8 @@
            map.arc(hits, {strokeWidth: 2, strokeColor: strokeColor});
 
            // add boom to the bubbles queue
-           boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,fillOpacity:1,
+           // Size is disprop
+           boom.push( { radius: (15-shown_attacks < 1? 1: 15-shown_attacks), latitude: +dstlat, longitude: +dstlong,fillOpacity:1,
                          attk: which_attack, borderColor: strokeColor} );
 
            map.bubbles(boom, {

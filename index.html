@@ -145,7 +145,7 @@
           popupOnHover: true,
           highlightOnHover: true,
           highlightFillColor: 'green',
-          highlightBorderColor: 'black',
+          highlightBorderColor: 'black'
         }
 
       });
@@ -212,8 +212,8 @@
            map.arc(hits, {strokeWidth: 2, strokeColor: strokeColor});
 
            // add boom to the bubbles queue
-           boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,
-                        fillOpacity: 1, attk: which_attack, fill: strokeColor} );
+           boom.push( { radius: 7, latitude: +dstlat, longitude: +dstlong,fillOpacity:1,
+                         attk: which_attack, borderColor: strokeColor} );
 
            map.bubbles(boom, {
                 popupTemplate: function(geo, data) {

@@ -1,65 +1,11 @@
-<!DOCTYPE html>
-<head>
-    <meta charset="utf-8">
+function about() {
+    $("#about").modal();
+}
 
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="https://d3js.org/d3.geo.projection.v0.min.js"></script>
-    <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="https://datamaps.github.io/scripts/datamaps.world.min.js?v=1"></script>
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="jquery.simplemodal-1.4.4.js"></script>
-
-    <script src="scripts.js"></script>
-
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
-</head>
-
-<body>
-	<div id="mitm" class="info_box" title="MITM"><p>MITM Description here</p></div>
-	<div id="sql" class="info_box" title="SQL injection"><p>SQL Description here</p></div>
-	<div id="malware" class="info_box" title="malware"><p>malware Description here</p></div>
-	<div id="DoS" class="info_box" title="denial of service"><p>DoS Description here</p></div>
-	<div id="phishing" class="info_box" title="phishing"><p>phishing Description here</p></div>
-	<div id="ZDE" class="info_box" title="ZDE"><p>ZDE Description here</p></div>
-
-
-  <center><div id="fullscreen"></div></center>
-  <div id="titlediv">Cyber Attack Map</div>
-  <div id="attackdiv"></div>
-  <div id="aboutdiv"><i class="fa fa-question-circle fa-2x" onClick="about();"></i></div>
-
-  <button class="page_button top_btn left_btn" onClick="info(mitm);" style="background-color:black;">MITM</button>
-  <button class="page_button middle_btn left_btn" onClick="info(sql);" style="background-color:orange;">SQL</button>
-  <button class="page_button bottom_btn left_btn" onClick="info(malware);" style="background-color:blue;">malware</button>
-  <button class="page_button top_btn right_btn" onClick="info(phishing);" style="background-color:red;">phishing</button>
-  <button class="page_button middle_btn right_btn" onClick="info(DoS);" style="background-color:purple;">denial of service</button>
-  <button class="page_button bottom_btn right_btn" onClick="info(ZDE);" style="background-color:teal;">zero day exploit</button>
-
-  <div id="ccdiv">
-
-  <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a>
-  </div>
-
-  <div id="about">
-  <h3>About IPew</h3>
-  Attack maps are the <span style="font-family: monospace;">&lt;blink&gt;</span> tag of information security. They are pure eye candy, meant to scare the general public and <i>WOW</i> unsuspecting executives visiting Security Operations Centers. Yet, security vendors keep cranking them out. We didn't want organizations without "real" data or l33t animation skills to to feel left out, so we built this map for anyone to use [CC BY-SA]. Plus, they're all missing sound effects! And, most (all, really) use mind-numbingly dumb map projections, begging the question: <i>"Does Greenland make my map look big?"</i>.<br/>
-  <br/>
-  The default map uses a statistical model (infrequently updated) for source "attack" node country of origin &amp; frequency while destinations are fully randomized. The default sound is a Star Wars "blaster" (guess which one!). Sounds can be customized and an organization name can be specified, plus there are a few other <i>interesting</i> options.<br/>
-  <br/>
-  Check out the <a target=_blank href='http://github.com/hrbrmstr/pewpew'>github repository</a> for more information and instructions on how to customize the map options for maximum effect.<br/>
-  <br/>
-  Brought to you by <a target=_blank href="http://twitter.com/alexcpsec">@alexcpsec</a>, <a target=_blank href="http://twitter.com/hrbrmstr">@hrbrmstr</a> &amp; <a target=_blank href="http://dds.ec/blog">Data-Driven Security</a>
-  </div>
-
-  <!-- Use Hash-Bang to maintain scroll position when closing modal -->
-  <a href="#!" class="modal-close" title="Close this modal"
-      data-dismiss="modal" data-close="Close">&times;</a>
-</section>
-
-
-  <script>
-
+function info(attack){
+    console.log("info("+attack+")");
+    $(attack).modal();
+}
     // setup default min/max timer range for random draw
     attack_min = 100 ;
     attack_max = 2000 ;
@@ -361,7 +307,4 @@
     // lazy-dude's responsive window
     d3.select(window).on('resize', function() { location.reload(); });
 
-</script>
-   
-</body>
-</html>
+ 

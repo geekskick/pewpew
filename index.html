@@ -115,67 +115,7 @@
 
     if (typeof org_name !== 'undefined') { $("#titlediv").text(decodeURI(org_name) + " Cyber Attack Map").html() }
 
-    // we maintain a fixed queue of "attacks" via this class
-    function FixedQueue( size, initialValues ){
-      initialValues = (initialValues || []);
-      var queue = Array.apply( null, initialValues );
-      queue.fixedSize = size;
-      queue.push = FixedQueue.push;
-      queue.splice = FixedQueue.splice;
-      queue.unshift = FixedQueue.unshift;
-      FixedQueue.trimTail.call( queue );
-      return( queue );
-    }
-
-    FixedQueue.trimHead = function(){
-      if (this.length <= this.fixedSize){ return; }
-      Array.prototype.splice.call( this, 0, (this.length - this.fixedSize) );
-    };
-
-    FixedQueue.trimTail = function(){
-      if (this.length <= this.fixedSize) { return; }
-      Array.prototype.splice.call( this, this.fixedSize, (this.length - this.fixedSize)
-      );
-    };
-
-    FixedQueue.wrapMethod = function( methodName, trimMethod ){
-      var wrapper = function(){
-        var method = Array.prototype[ methodName ];
-        var result = method.apply( this, arguments );
-        trimMethod.call( this );
-        return( result );
-      };
-      return( wrapper );
-    };
-
-    FixedQueue.push = FixedQueue.wrapMethod( "push", FixedQueue.trimHead );
-    FixedQueue.splice = FixedQueue.wrapMethod( "splice", FixedQueue.trimTail );
-    FixedQueue.unshift = FixedQueue.wrapMethod( "unshift", FixedQueue.trimTail );
-
-    var rand = function(min, max) {
-        return Math.random() * (max - min) + min;
-    };
-
-    var getRandomCountry = function(countries, weight) {
-
-        var total_weight = weight.reduce(function (prev, cur, i, arr) {
-            return prev + cur;
-        });
-
-        var random_num = rand(0, total_weight);
-        var weight_sum = 0;
-
-        for (var i = 0; i < countries.length; i++) {
-            weight_sum += weight[i];
-            weight_sum = +weight_sum.toFixed(2);
-
-            if (random_num <= weight_sum) {
-                return countries[i];
-            }
-        }
-
-    };
-
+        
     // need to make this dynamic since it is approximated from sources
     var countries = [9,22,29,49,56,58,78,82,102,117,139,176,186] ;
     var weight = [0.000,0.001,0.004,0.008,0.009,0.037,0.181,0.002,0.000,0.415,0.006,0.075,0.088];
@@ -227,7 +167,7 @@
     var hits = FixedQueue( 7, [  ] );
     var boom = FixedQueue( 7, [  ] );
 
-        // doing this a bit fancy for a hack, but it makes it
+    // doing this a bit fancy for a hack, but it makes it
     // easier to group code functions together and have variables
     // out of global scope
     var attacks = {
